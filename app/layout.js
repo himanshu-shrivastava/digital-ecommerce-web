@@ -1,6 +1,7 @@
 import "./globals.css"
 import { Funnel_Display } from 'next/font/google'
 import Provider from "./provider"
+import { ClerkProvider } from "@clerk/nextjs"
 
 export const metadata = {
   title: "Create Next App",
@@ -11,12 +12,14 @@ const AppFont = Funnel_Display({ subsets: ['latin'] })
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning={ false }>
-      <body cz-shortcut-listen="false" className={ AppFont.className }>
-        <Provider>
-          { children }
-        </Provider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning={ false }>
+        <body cz-shortcut-listen="false" className={ AppFont.className }>
+          <Provider>
+            { children }
+          </Provider>
+        </body>
+      </html>
+    </ClerkProvider>
   )
 }
