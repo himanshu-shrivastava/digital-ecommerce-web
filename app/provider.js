@@ -15,7 +15,7 @@ function Provider({ children }) {
 
     const CheckNewUser = async () => {
         const result = await axios.post('/api/user', { user: user })
-        console.log('CheckNewUser', result?.data)
+        // console.log('CheckNewUser', result?.data)
     }
 
     return (

@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
+import Link from 'next/link'
 import React from 'react'
 
 function Hero() {
@@ -10,7 +11,9 @@ function Hero() {
                     <h2 className='font-extrabold text-4xl text-white'>Speed Up your Creative Workflow</h2>
                     <p className='text-gray-200 mt-5'>Join a growing family of 43,436 designers, creator and makers from around the world</p>
                     <div className='flex gap-5 mt-8'>
-                        <Button>Explore</Button>
+                        <Link href={ '/dashboard' } >
+                            <Button>Explore</Button>
+                        </Link>
                         <Button className='bg-red-500'>Sell</Button>
                     </div>
                 </div>
@@ -23,9 +26,6 @@ function Hero() {
                         className='scale-x-[-1]'
                     />
                 </div>
-            </div>
-            <div>
-
             </div>
         </div>
     )
