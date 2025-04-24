@@ -19,7 +19,7 @@ function ImageUpload({ onImageSelect }) {
         <div>
             <h4>Upload Product Image</h4>
             <input
-                type='file' id='imageupload' name='image' className='hidden'
+                type='file' id='imageupload' name='image' className='hidden' accept="image/*"
                 onChange={ handleFileChange }
             />
             <label htmlFor='imageupload'>

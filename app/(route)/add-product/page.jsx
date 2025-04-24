@@ -1,6 +1,10 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useUser } from '@clerk/nextjs'
+import { Loader2Icon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import axios from 'axios'
 
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select"
@@ -10,8 +14,15 @@ import { Button } from '@/components/ui/button'
 import ImageUpload from './_components/ImageUpload'
 
 function AddProduct() {
-
     const [formData, setFormData] = useState([])
+    const { user } = useUser()
+    const [loading, setLoading] = useState(false)
+    const router = useRouter()
+    useEffect(() => {
+        setFormData({
+            userEmail: user?.primaryEmailAddress?.emailAddress
+        })
+    }, [user])
 
     const handleInputChange = (fieldName, fieldValue) => {
         setFormData(prev => ({
@@ -20,12 +31,27 @@ function AddProduct() {
         }))
     }
 
-    const handleProductButtonClick = () => {
+    const handleProductButtonClick = async () => {
+
+        // Need to add validation for all fields
+        // Return back to Form if any prefilled value and error
+        setLoading(true)
         console.log('formData', formData)
-        //Validate the input Data
-        //Upload Images to Cloud and generate Image Url
-        //Upload file to Cloud and generate file Url
-        //Save Form data along with image url and file url to DB
+        const formDataObj = new FormData()
+        formDataObj.append('image', formData.image)
+        formDataObj.append('file', formData.file)
+        formDataObj.append('data', JSON.stringify(formData))
+        const result = await axios.post('api/products', formDataObj, {
+            headers: {
+                'Content-Type': 'multiport/form-data' // Passing JSON Data along woth Files and Images
+            }
+        })
+        setLoading(false)
+        console.log('result', result)
+        if (result) {
+            router.push('/dashboard')
+            // router.replace('/dashboard')
+        }
     }
 
     return (
@@ -34,13 +60,14 @@ function AddProduct() {
             <p>Start adding product details to sell your item</p>
 
             <div className='grid grid-cols-1 md:grid-cols-2 gap-5 mt-10'>
+
                 {/* Left Section */ }
                 <div className='flex flex-col gap-5'>
                     <ImageUpload onImageSelect={ (e) => handleInputChange(e.target.name, e.target.files[0]) } />
                     <div>
                         <h4>Upload file which you want to Sell</h4>
                         <Input
-                            type='file' name='file' className='cursor-pointer'
+                            type='file' name='file' className='cursor-pointer' accept=".pdf,.txt,.doc,.docx"
                             onChange={ (e) => handleInputChange(e.target.name, e.target.files[0]) }
                         />
                     </div>
@@ -96,9 +123,9 @@ function AddProduct() {
                             onChange={ (e) => handleInputChange(e.target.name, e.target.value) }
                         />
                     </div>
-                    {/* <div> */ }
-                    <Button onClick={ handleProductButtonClick }>Add Product</Button>
-                    {/* </div> */ }
+                    <Button onClick={ handleProductButtonClick } disabled={ loading }>
+                        { loading ? <Loader2Icon className='animate-spin' /> : 'Add Product' }
+                    </Button>
                 </div>
             </div>
         </div>
