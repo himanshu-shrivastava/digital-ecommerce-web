@@ -5,17 +5,19 @@ import axios from 'axios'
 import Image from 'next/image'
 
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { toast } from 'sonner'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import SimilarProduct from './_components/SimilarProduct'
+import AddToCartBtn from '@/app/_components/AddToCartBtn'
+import { useUser } from '@clerk/nextjs'
 
 function ProductDetail({ params }) {
 
     const { productId } = React.use(params)
     const [productDetail, setProductDetail] = useState()
     const [loading, setLoading] = useState(false)
+    const { user } = useUser()
 
     useEffect(() => {
         GetProductDetail()
@@ -57,7 +59,7 @@ function ProductDetail({ params }) {
                     <h3 className='font-bold text-3xl text-yellow-600'>${ productDetail?.price }</h3>
                     <p className='text-gray-500'>The { productDetail?.category } will send to your registered email id once you purchase this digital content.</p>
 
-                    <Button className='w-full' size='lg'>Add to Cart</Button>
+                    <AddToCartBtn size='lg' user={ user } product={ productDetail } />
 
                     <Accordion type="single" collapsible>
                         <AccordionItem value="item-1">
@@ -71,9 +73,7 @@ function ProductDetail({ params }) {
                     </Accordion>
                 </div>
             </div>
-            <div className='mt-10'>
-                <SimilarProduct category={ productDetail?.category } productId={ productId } />
-            </div>
+            <SimilarProduct category={ productDetail?.category } productId={ productId } />
         </div>
     )
 }

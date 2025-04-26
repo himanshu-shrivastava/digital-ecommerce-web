@@ -6,6 +6,7 @@ import { UserButton } from '@clerk/nextjs'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { CartContext } from '../_context/CartContext'
+import CartList from './CartList'
 
 function Header() {
 
@@ -25,12 +26,14 @@ function Header() {
                 )) }
             </ul>
             <div className='flex gap-5 items-center'>
-                <div className='flex items-center '>
-                    <ShoppingBag />
-                    <Badge className='bg-black hover:bg-black text-white rounded-full py-1'>
-                        { cart?.length }
-                    </Badge>
-                </div>
+                <CartList>
+                    <div className='flex items-center '>
+                        <ShoppingBag />
+                        <Badge className='bg-black hover:bg-black text-white rounded-full py-1'>
+                            { cart?.length }
+                        </Badge>
+                    </div>
+                </CartList>
                 <Link href={ '/dashboard' } >
                     <Button className='bg-red-500 hover:bg-red-600'>Start Selling</Button>
                 </Link>

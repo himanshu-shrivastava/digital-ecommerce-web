@@ -19,7 +19,6 @@ function SimilarProduct({ category = '', productId = 0 }) {
                 setSimilarProducts(product_detail?.data?.success)
             } else {
                 console.log('GetSimilarProductList: ', product_detail?.data?.error)
-                // toast('GetSimilarProductList:' + product_detail?.data?.error)
             }
         } catch (e) {
             console.log('Error:', e)
@@ -28,15 +27,14 @@ function SimilarProduct({ category = '', productId = 0 }) {
         }
     }
 
-    return similarProducts.length > 0 && (
-        <div className='mt-20'>
+    return (
+        <div className='mt-14'>
             <h2 className='font-bold text-xl flex justify-between items-center'>
                 Similar Products
             </h2>
-
             <div>
-                { similarProducts?.length === 0 &&
-                    <h2 className='font-medium text-2xl mt-10 text-center text-gray-300'>No Listing Found</h2>
+                { loading && similarProducts?.length === 0 &&
+                    <h2 className='font-medium text-2xl mt-10 text-center text-gray-300'>No Data Found</h2>
                 }
                 <DisplayProductList productList={ similarProducts } />
             </div>
