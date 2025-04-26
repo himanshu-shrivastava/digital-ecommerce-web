@@ -1,14 +1,19 @@
 import React from 'react'
-import ProductListItem from './ProductListItem'
+import ProductCardItem from './ProductCardItem'
+import { useUser } from '@clerk/nextjs'
 
-function DisplayProductList({ productList }) {
+function DisplayProductList({ productList, editable = false }) {
+    const { user } = useUser()
+
     return (
         <div className='grid grid-cols-2 lg:grid-cols-3 gap-5 mt-5'>
             { productList?.length > 0
                 ? productList.map((product, index) => (
-                    <ProductListItem
+                    <ProductCardItem
                         key={ index }
                         product={ product }
+                        user={ user }
+                        editable={ editable }
                     />
                 ))
                 : [1, 2, 3, 4, 5, 6].map((item, index) => (

@@ -13,7 +13,7 @@ import SimilarProduct from './_components/SimilarProduct'
 
 function ProductDetail({ params }) {
 
-    const { product_id } = React.use(params)
+    const { productId } = React.use(params)
     const [productDetail, setProductDetail] = useState()
     const [loading, setLoading] = useState(false)
 
@@ -24,7 +24,7 @@ function ProductDetail({ params }) {
     const GetProductDetail = async () => {
         setLoading(true)
         try {
-            const product_detail = await axios.get(`/api/products?productId=${product_id}`)
+            const product_detail = await axios.get(`/api/products?productId=${productId}`)
             if (product_detail?.data?.success) {
                 setProductDetail(product_detail?.data?.success[0])
             } else {
@@ -72,7 +72,7 @@ function ProductDetail({ params }) {
                 </div>
             </div>
             <div className='mt-10'>
-                <SimilarProduct category={ productDetail?.category } productId={ product_id } />
+                <SimilarProduct category={ productDetail?.category } productId={ productId } />
             </div>
         </div>
     )

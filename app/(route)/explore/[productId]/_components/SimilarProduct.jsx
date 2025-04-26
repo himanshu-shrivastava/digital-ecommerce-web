@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-
-import { toast } from 'sonner'
-import ProductListItem from '@/app/_components/ProductListItem'
+import DisplayProductList from '@/app/_components/DisplayProductList'
 
 function SimilarProduct({ category = '', productId = 0 }) {
 
@@ -20,7 +18,8 @@ function SimilarProduct({ category = '', productId = 0 }) {
             if (product_detail?.data?.success) {
                 setSimilarProducts(product_detail?.data?.success)
             } else {
-                toast('GetSimilarProductList:' + product_detail?.data?.error)
+                console.log('GetSimilarProductList: ', product_detail?.data?.error)
+                // toast('GetSimilarProductList:' + product_detail?.data?.error)
             }
         } catch (e) {
             console.log('Error:', e)
@@ -39,16 +38,7 @@ function SimilarProduct({ category = '', productId = 0 }) {
                 { similarProducts?.length === 0 &&
                     <h2 className='font-medium text-2xl mt-10 text-center text-gray-300'>No Listing Found</h2>
                 }
-                <div className='grid gap-10 grid-cols-2 lg:grid-cols-3 mt-5'>
-                    { similarProducts?.length > 0 &&
-                        similarProducts.map((product, index) => (
-                            <ProductListItem
-                                key={ index }
-                                product={ product }
-                            />
-                        ))
-                    }
-                </div>
+                <DisplayProductList productList={ similarProducts } />
             </div>
         </div>
     )

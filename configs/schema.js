@@ -17,5 +17,13 @@ export const productsTable = pgTable("products", {
     imageUrl: varchar().notNull(),
     fileUrl: varchar().notNull(),
     message: varchar(),
-    createdBy: varchar('createdBy').notNull().references(() => usersTable.email)
+    createdBy: varchar('createdBy').notNull().references(() => usersTable.email),
+    uniqueId: integer()
+})
+
+export const cartTable = pgTable("carts", {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    emailId: varchar('emailId').notNull().references(() => usersTable.email),
+    productId: integer('productId').notNull().references(() => productsTable.id),
+    quantity: integer().default(1)
 })

@@ -147,7 +147,7 @@ export async function GET(req) {
         if (db_select?.length > 0) {
             return NextResponse.json({ 'success': db_select })
         } else {
-            return NextResponse.json({ 'error': 'Server Error:, Please reload the page again.' })
+            return NextResponse.json({ 'error': 'No Record(s) Found.' })
         }
     }
     catch (e) {

@@ -73,6 +73,7 @@ function Explore() {
             </div>
 
             <DisplayProductList productList={ productList } />
+
             <div className='flex items-center justify-center mt-10 flex-col'>
                 <Button onClick={ () => GetProductList(offset + 6) } disabled={ loading }>
                     { loading ? <Loader2Icon className='animate-spin' /> : 'Load More' }
