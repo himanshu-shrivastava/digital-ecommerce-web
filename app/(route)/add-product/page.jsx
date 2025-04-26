@@ -35,8 +35,9 @@ function AddProduct() {
 
         // Need to add validation for all fields
         // Return back to Form if any prefilled value and error
+
         setLoading(true)
-        console.log('formData', formData)
+        console.log(formData)
         const formDataObj = new FormData()
         formDataObj.append('image', formData.image)
         formDataObj.append('file', formData.file)
@@ -47,10 +48,10 @@ function AddProduct() {
             }
         })
         setLoading(false)
-        console.log('result', result)
-        if (result) {
+        if (result?.data?.success) {
             router.push('/dashboard')
-            // router.replace('/dashboard')
+        } else {
+            console.log(result?.data?.error)
         }
     }
 
@@ -65,7 +66,7 @@ function AddProduct() {
                 <div className='flex flex-col gap-5'>
                     <ImageUpload onImageSelect={ (e) => handleInputChange(e.target.name, e.target.files[0]) } />
                     <div>
-                        <h4>Upload file which you want to Sell</h4>
+                        <h4>Upload file which you want to Sell <span className='text-red-500'>*</span></h4>
                         <Input
                             type='file' name='file' className='cursor-pointer' accept=".pdf,.txt,.doc,.docx"
                             onChange={ (e) => handleInputChange(e.target.name, e.target.files[0]) }
@@ -83,21 +84,21 @@ function AddProduct() {
                 {/* Right Section */ }
                 <div className='flex flex-col gap-5'>
                     <div>
-                        <h4>Product Title</h4>
+                        <h4>Product Title <span className='text-red-500'>*</span></h4>
                         <Input
                             name='title' placeholder='Ex.UI Kit in Figma'
                             onChange={ (e) => handleInputChange(e.target.name, e.target.value) }
                         />
                     </div>
                     <div>
-                        <h4>Price (in $)</h4>
+                        <h4>Price (in $) <span className='text-red-500'>*</span></h4>
                         <Input
                             type='number' min='0' name='price' placeholder='Ex.99, 199'
                             onChange={ (e) => handleInputChange(e.target.name, e.target.value) }
                         />
                     </div>
                     <div>
-                        <h4>Category</h4>
+                        <h4>Category <span className='text-red-500'>*</span></h4>
                         <Select onValueChange={ (value) => handleInputChange('category', value) } >
                             <SelectTrigger className="w-[180px]">
                                 <SelectValue placeholder="Select Category" />
@@ -110,7 +111,7 @@ function AddProduct() {
                         </Select>
                     </div>
                     <div>
-                        <h4>Description</h4>
+                        <h4>Description <span className='text-red-500'>*</span></h4>
                         <Textarea
                             name='description' placeholder='Add Product Description'
                             onChange={ (e) => handleInputChange(e.target.name, e.target.value) }

@@ -1,3 +1,4 @@
+import cloudinary from "@/configs/cloudinary"
 import { db } from "@/configs/db"
 import { storage } from "@/configs/firebaseConfig"
 import { productsTable } from "@/configs/schema"
@@ -6,55 +7,83 @@ import { NextResponse } from "next/server"
 
 export async function POST(req) {
 
-    // get FormData (Fields, Files)
+    /* Get FormData (Fields and Files) */
     const formData = await req.formData()
-    console.log('formData', formData)
     const image = formData.get('image')
     const file = formData.get('file')
     const data = JSON.parse(formData.get('data'))
 
-    /* Cloudinary - save images/files */
-    // const arrayBuffer = await image.arrayBuffer()
-    // const buffer = new Uint8Array(arrayBuffer)
-    // const uploadResponse = await cloudinary.uploader.upload_stream({
-    //     folder: 'retro-digital-e-commerce',
-    //     use_filename: true,
-    //     resource_type: 'image',
-    // }).end(image)
-    // console.log('uploadResponse', uploadResponse)
+    const isImageUploaded = (image !== 'undefined')
+    const isFileUploaded = (file !== 'undefined')
 
-    // Save Product Image to DB
-    const imageName = Date.now() + '.png'
-    const storageImageRef = ref(storage, 'images/' + imageName)
-    await uploadBytes(storageImageRef, image).then(snapshot => {
-        console.log('Image Uploaded')
-    })
-    const imageUrl = await getDownloadURL(storageImageRef) ?? ''
+    if (isImageUploaded && isFileUploaded && data.title && data.price && data.category && data.description) {
+        const fileNameExt = file.name.split('.').pop()
+        let imageName = Date.now() + '-' + (image.name).split('.')[0]
+        let fileName = Date.now() + '-' + (file.name).split('.')[0]
+        let imageUrl = null
+        let fileUrl = null
 
-    // Save Product File to DB
-    const fileName = Date.now().toString()
-    const storageFileRef = ref(storage, 'files/' + fileName)
-    await uploadBytes(storageFileRef, file).then(snapshot => {
-        console.log('File Uploaded')
-    })
-    const fileurl = await getDownloadURL(storageFileRef) ?? ''
+        if (process.env.NEXT_PUBLIC_CLOUD_FOR_UPLOAD === 'cloudinary') {
+            /* Upload Image to Cloud */
+            const arrayBufferImage = await image.arrayBuffer()
+            const bufferImage = Buffer.from(arrayBufferImage).toString('base64')
+            const base64Image = 'data:' + image.type + ';base64,' + bufferImage
+            const uploadImageResponse = await cloudinary.uploader.upload(base64Image, {
+                folder: 'retro-digi-ecommerce/images',
+                public_id: imageName,
+                resource_type: 'image'
+            })
+            imageUrl = uploadImageResponse.secure_url ?? null
+            console.log('imageUrl', imageUrl)
 
-    // Save Data to Database
-    const db_insert = await db.insert(productsTable).values({
-        title: data?.title,
-        price: data?.price,
-        description: data?.description,
-        about: data?.about,
-        category: data?.category,
-        imageUrl: imageUrl,
-        fileUrl: fileurl,
-        message: data?.message,
-        createdBy: data?.userEmail
-    }).returning(productsTable)
+            /* Upload File to Cloud */
+            const arrayBufferFile = await file.arrayBuffer()
+            const bufferFile = Buffer.from(arrayBufferFile).toString('base64')
+            const base64File = 'data:' + file.type + ';base64,' + bufferFile
+            const uploadFileResponse = await cloudinary.uploader.upload(base64File, {
+                folder: 'retro-digi-ecommerce/files',
+                public_id: fileName + (fileNameExt !== 'pdf' ? '.' + fileNameExt : ''),
+                resource_type: 'auto'
+            })
+            fileUrl = uploadFileResponse.secure_url ?? null
+            console.log('fileUrl', fileUrl)
+        } else {
+            /* Upload Image to Cloud */
+            const storageImageRef = ref(storage, 'digi-ecommerce/images/' + imageName + '.png')
+            await uploadBytes(storageImageRef, image).then(snapshot => {
+                console.log('Image Uploaded')
+            })
+            imageUrl = await getDownloadURL(storageImageRef) ?? ''
+            console.log('imageUrl', imageUrl)
 
-    if (db_insert?.length > 0) {
-        return NextResponse.json(db_insert[0])
+            /* Upload File to Cloud */
+            const storageFileRef = ref(storage, 'digi-ecommerce/files/' + fileName.toString())
+            await uploadBytes(storageFileRef, file).then(snapshot => {
+                console.log('File Uploaded')
+            })
+            fileUrl = await getDownloadURL(storageFileRef) ?? ''
+            console.log('fileUrl', fileUrl)
+        }
+
+        /* Save Data to Database */
+        const db_insert = await db.insert(productsTable).values({
+            imageUrl: imageUrl,
+            fileUrl: fileUrl,
+            message: data?.message ?? '',
+            title: data?.title,
+            price: data?.price,
+            category: data?.category,
+            description: data?.description,
+            about: data?.about,
+            createdBy: data?.userEmail
+        }).returning(productsTable)
+
+        if (db_insert?.length > 0) {
+            return NextResponse.json('success', db_insert[0])
+        } else {
+            return NextResponse.json({ 'error': 'Server Error, Please Try Again.' })
+        }
     } else {
-        return NextResponse.json({ 'error': 'Server Error, Please Try Again.' })
+        return NextResponse.json({ 'error': 'Required fields should not be empty.' })
     }
 }

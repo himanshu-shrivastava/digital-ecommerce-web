@@ -17,7 +17,7 @@ function ImageUpload({ onImageSelect }) {
     }
     return (
         <div>
-            <h4>Upload Product Image</h4>
+            <h4>Upload Product Image <span className='text-red-500'>*</span></h4>
             <input
                 type='file' id='imageupload' name='image' className='hidden' accept="image/*"
                 onChange={ handleFileChange }
