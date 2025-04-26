@@ -3,30 +3,48 @@
 import { Button } from '@/components/ui/button'
 import React, { useEffect, useState } from 'react'
 import Products from '../_mockData/Products'
-import ProductListItem from './ProductListItem'
+import axios from 'axios'
+import { toast } from 'sonner'
+import Link from 'next/link'
+import DisplayProductList from './DisplayProductList'
 
 function ProductList() {
     const [productList, setProductList] = useState([])
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        setProductList(Products)
-    })
+        // setProductList(Products) // getting mockdata for testing
+        GetProductList()
+    }, [])
+
+    const GetProductList = async () => {
+        setLoading(true)
+        try {
+            const product_list = await axios.get('/api/products?limit=9')
+            if (product_list?.data?.success) {
+                setProductList(product_list?.data?.success)
+            } else {
+                toast(product_list?.data?.error)
+            }
+        } catch (e) {
+            console.log('Error:', e)
+        } finally {
+            setLoading(false)
+        }
+    }
 
     return (
         <div>
             <h2 className='font-bold text-xl flex justify-between items-center'>
                 Featured
-                <span><Button>View All</Button></span>
+                <span>
+                    <Link href={ '/explore' }>
+                        <Button>View All</Button>
+                    </Link>
+                </span>
             </h2>
 
-            <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5 mt-5'>
-                { productList.map((product, index) => (
-                    <ProductListItem
-                        key={ index }
-                        product={ product }
-                    />
-                )) }
-            </div>
+            <DisplayProductList productList={ productList } />
         </div>
     )
 }

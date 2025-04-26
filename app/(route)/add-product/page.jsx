@@ -38,12 +38,11 @@ function AddProduct() {
         // Return back to Form if any prefilled value and error
 
         setLoading(true)
-        console.log(formData)
         const formDataObj = new FormData()
         formDataObj.append('image', formData.image)
         formDataObj.append('file', formData.file)
         formDataObj.append('data', JSON.stringify(formData))
-        const result = await axios.post('api/products', formDataObj, {
+        const result = await axios.post('/api/products', formDataObj, {
             headers: {
                 'Content-Type': 'multiport/form-data' // Passing JSON Data along woth Files and Images
             }
@@ -53,8 +52,7 @@ function AddProduct() {
             toast('Product is added successfully')
             router.push('/dashboard')
         } else {
-            console.log('Error:', result?.data?.error)
-            toast('Error:', result?.data?.error)
+            toast(result?.data?.error)
         }
     }
 

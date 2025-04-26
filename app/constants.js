@@ -8,7 +8,7 @@ export const HeaderMenu = [
         path: '/store'
     },
     {
-        name: 'Explore',
+        name: 'How It Works',
         path: '/how-it-works'
     }
 ]
@@ -23,4 +23,27 @@ export const ProductCategory = [
     'Video',
     'Illustration',
     'Other'
+]
+
+export const SortingOptions = [
+    {
+        label: 'Newest',
+        field: 'id',
+        order: 'desc'
+    },
+    {
+        label: 'Price (Low to High',
+        field: 'price',
+        order: 'asc'
+    },
+    {
+        label: 'Price (High to Low',
+        field: 'price',
+        order: 'desc'
+    },
+    {
+        label: 'More Viewed',
+        field: 'id',
+        order: 'desc'
+    },
 ]

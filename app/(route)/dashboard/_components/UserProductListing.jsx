@@ -8,7 +8,7 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
-function UserListing() {
+function UserProductListing() {
     const [listing, setListing] = useState([])
     const [loading, setLoading] = useState(false)
     const { user } = useUser()
@@ -20,12 +20,11 @@ function UserListing() {
     const GetUserProductList = async () => {
         setLoading(true)
         try {
-            const product_list = await axios.get('api/products?email=' + user?.primaryEmailAddress.emailAddress)
+            const product_list = await axios.get('/api/products?email=' + user?.primaryEmailAddress.emailAddress)
             if (product_list?.data?.success) {
-                console.log(product_list?.data?.success)
                 setListing(product_list?.data?.success)
             } else {
-                toast('Error:', product_list?.data?.error)
+                toast(product_list?.data?.error)
             }
         } catch (e) {
             console.log('Error:', e)
@@ -47,10 +46,14 @@ function UserListing() {
                 { listing?.length === 0 &&
                     <h2 className='font-medium text-2xl mt-10 text-center text-gray-300'>No Listing Found</h2>
                 }
-                <div className='grid gap-10 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-5'>
+                <div className='grid gap-10 grid-cols-2 lg:grid-cols-3 mt-5'>
                     { listing?.length > 0 &&
                         listing.map((product, index) => (
-                            <ProductListItem key={ index } product={ product } editable={ true } />
+                            <ProductListItem
+                                key={ index }
+                                product={ product }
+                                editable={ true }
+                            />
                         ))
                     }
                 </div>
@@ -59,4 +62,4 @@ function UserListing() {
     )
 }
 
-export default UserListing
+export default UserProductListing

@@ -35,7 +35,6 @@ export async function POST(req) {
                 resource_type: 'image'
             })
             imageUrl = uploadImageResponse.secure_url ?? null
-            console.log('imageUrl', imageUrl)
 
             /* Upload File to Cloud */
             const arrayBufferFile = await file.arrayBuffer()
@@ -47,7 +46,6 @@ export async function POST(req) {
                 resource_type: 'auto'
             })
             fileUrl = uploadFileResponse.secure_url ?? null
-            console.log('fileUrl', fileUrl)
         } else {
             /* Upload Image to Cloud */
             const storageImageRef = ref(storage, 'digi-ecommerce/images/' + imageName + '.png')
@@ -55,7 +53,6 @@ export async function POST(req) {
                 console.log('Image Uploaded')
             })
             imageUrl = await getDownloadURL(storageImageRef) ?? ''
-            console.log('imageUrl', imageUrl)
 
             /* Upload File to Cloud */
             const storageFileRef = ref(storage, 'digi-ecommerce/files/' + fileName.toString())
@@ -63,7 +60,6 @@ export async function POST(req) {
                 console.log('File Uploaded')
             })
             fileUrl = await getDownloadURL(storageFileRef) ?? ''
-            console.log('fileUrl', fileUrl)
         }
 
         /* Save Data to Database */
@@ -91,27 +87,42 @@ export async function POST(req) {
 
 export async function GET(req) {
 
-    const { searchParams } = new URL(req.url)
-    const email = searchParams.get('email')
+    try {
+        const { searchParams } = new URL(req.url)
+        const email = searchParams.get('email')
+        const limit = searchParams.get('limit') ?? 9
 
-    if (email !== 'undefined') {
-        const db_select = await db.select({
-            ...getTableColumns(productsTable),
-            user: {
-                name: usersTable.name,
-                image: usersTable.image
-            }
-        }).from(productsTable)
-            .innerJoin(usersTable, eq(productsTable.createdBy, usersTable.email))
-            .where(eq(productsTable.createdBy, email))
-            .orderBy(desc(productsTable.id))
-
+        let db_select = []
+        if (email) {
+            db_select = await db.select({
+                ...getTableColumns(productsTable),
+                user: {
+                    name: usersTable.name,
+                    image: usersTable.image
+                }
+            }).from(productsTable)
+                .innerJoin(usersTable, eq(productsTable.createdBy, usersTable.email))
+                .where(eq(productsTable.createdBy, email))
+                .orderBy(desc(productsTable.id))
+        } else {
+            db_select = await db.select({
+                ...getTableColumns(productsTable),
+                user: {
+                    name: usersTable.name,
+                    image: usersTable.image
+                }
+            }).from(productsTable)
+                .innerJoin(usersTable, eq(productsTable.createdBy, usersTable.email))
+                .orderBy(desc(productsTable.id))
+                .limit(Number(limit))
+        }
         if (db_select?.length > 0) {
             return NextResponse.json({ 'success': db_select })
         } else {
             return NextResponse.json({ 'error': 'Server Error:, Please reload the page again.' })
         }
-    } else {
-        return NextResponse.json({ 'error': 'Invalid Request' })
+    }
+    catch (e) {
+        return NextResponse.json({ 'error': e.message })
     }
 }
