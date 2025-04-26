@@ -1,10 +1,11 @@
+import { NextResponse } from "next/server"
+import { and, desc, eq, getTableColumns, ne } from "drizzle-orm"
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
+
 import cloudinary from "@/configs/cloudinary"
 import { db } from "@/configs/db"
 import { storage } from "@/configs/firebaseConfig"
 import { productsTable, usersTable } from "@/configs/schema"
-import { desc, eq, getTableColumns } from "drizzle-orm"
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
-import { NextResponse } from "next/server"
 
 export async function POST(req) {
 
@@ -86,11 +87,12 @@ export async function POST(req) {
 }
 
 export async function GET(req) {
-
     try {
         const { searchParams } = new URL(req.url)
         const email = searchParams.get('email')
         const limit = searchParams.get('limit') ?? 9
+        const productId = searchParams.get('productId') ?? 0
+        const category = searchParams.get('category') ?? ''
 
         let db_select = []
         if (email) {
@@ -104,7 +106,33 @@ export async function GET(req) {
                 .innerJoin(usersTable, eq(productsTable.createdBy, usersTable.email))
                 .where(eq(productsTable.createdBy, email))
                 .orderBy(desc(productsTable.id))
-        } else {
+        }
+        else if (category && productId) {
+            db_select = await db.select({
+                ...getTableColumns(productsTable),
+                user: {
+                    name: usersTable.name,
+                    image: usersTable.image
+                }
+            }).from(productsTable)
+                .innerJoin(usersTable, eq(productsTable.createdBy, usersTable.email))
+                .where(and(
+                    eq(productsTable.category, category),
+                    ne(productsTable.id, productId)
+                ))
+        }
+        else if (productId) {
+            db_select = await db.select({
+                ...getTableColumns(productsTable),
+                user: {
+                    name: usersTable.name,
+                    image: usersTable.image
+                }
+            }).from(productsTable)
+                .innerJoin(usersTable, eq(productsTable.createdBy, usersTable.email))
+                .where(eq(productsTable.id, productId))
+        }
+        else {
             db_select = await db.select({
                 ...getTableColumns(productsTable),
                 user: {

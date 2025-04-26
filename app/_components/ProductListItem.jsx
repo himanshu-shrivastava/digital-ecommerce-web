@@ -1,20 +1,15 @@
 import React from 'react'
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
+import Link from 'next/link'
 import Image from 'next/image'
+
+import { Card } from "@/components/ui/card"
 import { Button } from '@/components/ui/button'
 import { MoreVerticalIcon } from 'lucide-react'
 import ProductEditableOption from './ProductEditableOption'
 
 function ProductListItem({ product, editable = false }) {
     return (
-        <div>
+        <Link href={ `/explore/${product.id}` }>
             <Card className="p-1 md:p-2">
                 <Image src={ product?.imageUrl } alt={ product?.title } width={ 400 } height={ 250 } className='h-[180px] object-cover' />
                 <div className='mt-3'>
@@ -36,7 +31,7 @@ function ProductListItem({ product, editable = false }) {
                     </div>
                 </div>
             </Card>
-        </div>
+        </Link>
     )
 }
 
