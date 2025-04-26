@@ -2,6 +2,7 @@ import "./globals.css"
 import { Funnel_Display } from 'next/font/google'
 import Provider from "./provider"
 import { ClerkProvider } from "@clerk/nextjs"
+import { Toaster } from "@/components/ui/sonner"
 
 export const metadata = {
   title: "Digital E-Commerce",
@@ -18,6 +19,7 @@ export default function RootLayout({ children }) {
           <Provider>
             { children }
           </Provider>
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>

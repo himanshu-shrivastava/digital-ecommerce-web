@@ -1,9 +1,9 @@
 export default [
     {
         id: 1,
-        name: 'E commerce App UI Kit',
+        title: 'E commerce App UI Kit',
         price: 10,
-        image: '/iphone.png',
+        imageUrl: '/iphone.png',
         user: {
             image: '/user.png',
             name: 'Himanshu'
@@ -11,9 +11,9 @@ export default [
     },
     {
         id: 2,
-        name: 'E commerce App UI Kit',
+        title: 'E commerce App UI Kit',
         price: 10,
-        image: '/iphone.png',
+        imageUrl: '/iphone.png',
         user: {
             image: '/user.png',
             name: 'Himanshu'
@@ -21,9 +21,9 @@ export default [
     },
     {
         id: 3,
-        name: 'E commerce App UI Kit',
+        title: 'E commerce App UI Kit',
         price: 10,
-        image: '/iphone.png',
+        imageUrl: '/iphone.png',
         user: {
             image: '/user.png',
             name: 'Himanshu'
@@ -31,9 +31,9 @@ export default [
     },
     {
         id: 4,
-        name: 'E commerce App UI Kit',
+        title: 'E commerce App UI Kit',
         price: 10,
-        image: '/iphone.png',
+        imageUrl: '/iphone.png',
         user: {
             image: '/user.png',
             name: 'Himanshu'
@@ -41,9 +41,9 @@ export default [
     },
     {
         id: 5,
-        name: 'E commerce App UI Kit',
+        title: 'E commerce App UI Kit',
         price: 10,
-        image: '/iphone.png',
+        imageUrl: '/iphone.png',
         user: {
             image: '/user.png',
             name: 'Himanshu'
@@ -51,9 +51,9 @@ export default [
     },
     {
         id: 6,
-        name: 'E commerce App UI Kit',
+        title: 'E commerce App UI Kit',
         price: 10,
-        image: '/iphone.png',
+        imageUrl: '/iphone.png',
         user: {
             image: '/user.png',
             name: 'Himanshu'
@@ -61,9 +61,9 @@ export default [
     },
     {
         id: 7,
-        name: 'E commerce App UI Kit',
+        title: 'E commerce App UI Kit',
         price: 10,
-        image: '/iphone.png',
+        imageUrl: '/iphone.png',
         user: {
             image: '/user.png',
             name: 'Himanshu'

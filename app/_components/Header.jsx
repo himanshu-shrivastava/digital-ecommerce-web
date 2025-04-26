@@ -14,7 +14,7 @@ function Header() {
             <ul className='hidden md:flex gap-5'>
                 { HeaderMenu.map((menu, index) => (
                     <Link href={ menu?.path } key={ index }>
-                        <li className=' px-2 p-1 cursor-pointer hover:border-2 hover:border-white'>
+                        <li className=' px-3 p-1 cursor-pointer hover:border-2 hover:border-white'>
                             { menu?.name }
                         </li>
                     </Link>

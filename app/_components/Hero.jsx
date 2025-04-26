@@ -14,7 +14,7 @@ function Hero() {
                         <Link href={ '/dashboard' } >
                             <Button>Explore</Button>
                         </Link>
-                        <Button className='bg-red-500'>Sell</Button>
+                        <Button className='bg-red-500 hover:bg-red-600'>Sell</Button>
                     </div>
                 </div>
                 <div className='flex items-center justify-center'>

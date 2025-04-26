@@ -1,7 +1,8 @@
 import cloudinary from "@/configs/cloudinary"
 import { db } from "@/configs/db"
 import { storage } from "@/configs/firebaseConfig"
-import { productsTable } from "@/configs/schema"
+import { productsTable, usersTable } from "@/configs/schema"
+import { desc, eq, getTableColumns } from "drizzle-orm"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { NextResponse } from "next/server"
 
@@ -79,11 +80,38 @@ export async function POST(req) {
         }).returning(productsTable)
 
         if (db_insert?.length > 0) {
-            return NextResponse.json('success', db_insert[0])
+            return NextResponse.json({ 'success': db_insert[0] })
         } else {
             return NextResponse.json({ 'error': 'Server Error, Please Try Again.' })
         }
     } else {
         return NextResponse.json({ 'error': 'Required fields should not be empty.' })
+    }
+}
+
+export async function GET(req) {
+
+    const { searchParams } = new URL(req.url)
+    const email = searchParams.get('email')
+
+    if (email !== 'undefined') {
+        const db_select = await db.select({
+            ...getTableColumns(productsTable),
+            user: {
+                name: usersTable.name,
+                image: usersTable.image
+            }
+        }).from(productsTable)
+            .innerJoin(usersTable, eq(productsTable.createdBy, usersTable.email))
+            .where(eq(productsTable.createdBy, email))
+            .orderBy(desc(productsTable.id))
+
+        if (db_select?.length > 0) {
+            return NextResponse.json({ 'success': db_select })
+        } else {
+            return NextResponse.json({ 'error': 'Server Error:, Please reload the page again.' })
+        }
+    } else {
+        return NextResponse.json({ 'error': 'Invalid Request' })
     }
 }

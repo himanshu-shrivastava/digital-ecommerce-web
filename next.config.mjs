@@ -1,4 +1,12 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+    images: {
+        remotePatterns: [
+            new URL('https://firebasestorage.googleapis.com/**'),
+            new URL('https://res.cloudinary.com/dm24httno/image/upload/**'),
+            new URL('https://img.clerk.com/**'),
+        ]
+    }
+}
 
-export default nextConfig;
+export default nextConfig

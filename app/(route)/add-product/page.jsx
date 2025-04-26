@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { ProductCategory } from '@/app/constants'
 import { Button } from '@/components/ui/button'
 import ImageUpload from './_components/ImageUpload'
+import { toast } from 'sonner'
 
 function AddProduct() {
     const [formData, setFormData] = useState([])
@@ -49,9 +50,11 @@ function AddProduct() {
         })
         setLoading(false)
         if (result?.data?.success) {
+            toast('Product is added successfully')
             router.push('/dashboard')
         } else {
-            console.log(result?.data?.error)
+            console.log('Error:', result?.data?.error)
+            toast('Error:', result?.data?.error)
         }
     }
 
