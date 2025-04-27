@@ -3,6 +3,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { CartContext } from '../_context/CartContext'
 import CartItem from './CartItem'
 import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
 function CartList({ children }) {
 
@@ -37,7 +38,9 @@ function CartList({ children }) {
                                     <h2 className='flex font-bold text-2xl justify-between mt-10'>
                                         Total : <span>${ calculateTotal() }</span>
                                     </h2>
-                                    <Button className='w-full mt-3'>Checkout</Button>
+                                    <Link href={ '/checkout' }>
+                                        <Button className='w-full mt-3'>Checkout</Button>
+                                    </Link>
                                 </div>
                             </div>
                         </SheetDescription>
