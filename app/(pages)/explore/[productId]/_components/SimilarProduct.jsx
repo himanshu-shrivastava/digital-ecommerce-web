@@ -33,8 +33,8 @@ function SimilarProduct({ category = '', productId = 0 }) {
                 Similar Products
             </h2>
             <div>
-                { loading && similarProducts?.length === 0 &&
-                    <h2 className='font-medium text-2xl mt-10 text-center text-gray-300'>No Data Found</h2>
+                { !loading && similarProducts?.length === 0 &&
+                    <h2 className='font-medium text-2xl mt-10 text-center text-gray-300'>No similar product found in this Category</h2>
                 }
                 <DisplayProductList productList={ similarProducts } />
             </div>

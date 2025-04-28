@@ -2,7 +2,7 @@ import React from 'react'
 import ProductCardItem from './ProductCardItem'
 import { useUser } from '@clerk/nextjs'
 
-function DisplayProductList({ productList, editable = false }) {
+function DisplayProductList({ productList, editable = false, purchased = false }) {
     const { user } = useUser()
 
     return (
@@ -14,9 +14,10 @@ function DisplayProductList({ productList, editable = false }) {
                         product={ product }
                         user={ user }
                         editable={ editable }
+                        purchased={ purchased }
                     />
                 ))
-                : [1, 2, 3, 4, 5, 6].map((item, index) => (
+                : [1, 2, 3].map((item, index) => (
                     <div key={ index } className='h-[250px] w-full bg-slate-200 rounded-lg animate-pulse'></div>
                 ))
             }

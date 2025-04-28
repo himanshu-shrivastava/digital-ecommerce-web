@@ -35,12 +35,16 @@ function AddToCartBtn({ product, user, editable = false, size = 'sm' }) {
     return (
         <div>
             { !editable
-                ? <Button size={ size } className='mt-1 w-full' disabled={ loading } onClick={ AddToCart }>Add to Cart</Button>
-                : <ProductEditableOption>
+                ?
+                product?.is_deleted === false
+                    ? <Button size={ size } className='mt-1 w-full' disabled={ loading } onClick={ AddToCart }>Add to Cart</Button>
+                    : <Button size={ size } className='mt-1 w-full bg-gray-600 text-white' disabled={ true }>Out of Stock</Button>
+                :
+                <ProductEditableOption product={ product }>
                     <MoreVerticalIcon />
                 </ProductEditableOption>
             }
-        </div>
+        </div >
     )
 }
 

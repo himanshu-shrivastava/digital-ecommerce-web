@@ -6,6 +6,7 @@ import cloudinary from "@/configs/cloudinary"
 import { db } from "@/configs/db"
 import { storage } from "@/configs/firebaseConfig"
 import { productsTable, usersTable } from "@/configs/schema"
+import { currentUser } from "@clerk/nextjs/server"
 
 export async function POST(req) {
 
@@ -108,7 +109,10 @@ export async function GET(req) {
                 }
             }).from(productsTable)
                 .innerJoin(usersTable, eq(productsTable.createdBy, usersTable.email))
-                .where(eq(productsTable.createdBy, email))
+                .where(and(
+                    eq(productsTable.createdBy, email),
+                    eq(productsTable.is_deleted, false)
+                ))
                 .orderBy(desc(productsTable.id))
         }
         else if (category && productId) {
@@ -122,7 +126,8 @@ export async function GET(req) {
                 .innerJoin(usersTable, eq(productsTable.createdBy, usersTable.email))
                 .where(and(
                     eq(productsTable.category, category),
-                    ne(productsTable.id, productId)
+                    ne(productsTable.id, productId),
+                    eq(productsTable.is_deleted, false),
                 ))
         }
         else if (productId) {
@@ -155,6 +160,39 @@ export async function GET(req) {
         }
     }
     catch (e) {
+        return NextResponse.json({ 'error': e.message })
+    }
+}
+
+export async function DELETE(req) {
+    try {
+        const user = await currentUser()
+        const { searchParams } = new URL(req.url)
+        const productId = searchParams.get('productId')
+
+        /* Hard Delete */
+        // const db_query = await db.delete(productsTable)
+        //     .where(and(
+        //         eq(productsTable.id, Number(productId)),
+        //         eq(productsTable.createdBy, user?.primaryEmailAddress?.emailAddress)
+        //     ))
+        //     .returning({ deletedId: productsTable.id })
+
+        /* Soft Delete */
+        const db_query = await db.update(productsTable)
+            .set({ is_deleted: true })
+            .where(and(
+                eq(productsTable.id, Number(productId)),
+                eq(productsTable.createdBy, user?.primaryEmailAddress?.emailAddress)
+            ))
+            .returning({ updatedId: productsTable.id })
+
+        if (db_query) {
+            return NextResponse.json({ 'success': db_query })
+        } else {
+            return NextResponse.json({ 'error': 'No record found for deletion' })
+        }
+    } catch (e) {
         return NextResponse.json({ 'error': e.message })
     }
 }

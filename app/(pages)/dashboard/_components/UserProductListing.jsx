@@ -43,8 +43,8 @@ function UserProductListing() {
             </h2>
 
             <div>
-                { userProductList?.length === 0 &&
-                    <h2 className='font-medium text-2xl mt-10 text-center text-gray-300'>No Listing Found</h2>
+                { !loading && userProductList?.length === 0 &&
+                    <h2 className='font-medium text-2xl mt-10 text-center text-gray-300'>You haven\'t added any Product</h2>
                 }
                 <DisplayProductList productList={ userProductList } editable={ true } />
             </div>

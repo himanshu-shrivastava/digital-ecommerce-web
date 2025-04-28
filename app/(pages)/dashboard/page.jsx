@@ -1,6 +1,7 @@
 import React from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import UserProductListing from './_components/UserProductListing'
+import UserPurchaseHistory from './_components/UserPurchaseHistory'
 
 function Dashboard() {
     return (
@@ -14,7 +15,9 @@ function Dashboard() {
                 <TabsContent value="listing">
                     <UserProductListing />
                 </TabsContent>
-                <TabsContent value="purchase">Purchase Product</TabsContent>
+                <TabsContent value="purchase">
+                    <UserPurchaseHistory />
+                </TabsContent>
             </Tabs>
         </div>
     )

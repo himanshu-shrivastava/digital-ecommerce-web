@@ -1,11 +1,12 @@
 import { db } from "@/configs/db"
-import { cartsTable, ordersTable } from "@/configs/schema"
-import { eq } from "drizzle-orm"
+import { cartsTable, ordersTable, productsTable } from "@/configs/schema"
+import { desc, eq, getTableColumns } from "drizzle-orm"
 import { NextResponse } from "next/server"
 import { loadEnvConfig } from "@next/env"
 
 import { Resend } from 'resend'
 import EmailOrder from "@/emails/email"
+import { currentUser } from "@clerk/nextjs/server"
 
 // To make ENV variable accessible
 const projectDir = process.cwd()
@@ -69,4 +70,29 @@ const SendOrderEmail = async (orderDetail, userEmail) => {
         react: <EmailOrder orderDetail={ orderDetail } totalAmount={ calculateTotal() } />,
     })
     return email_result
+}
+
+export async function GET(req) {
+    try {
+        const user = await currentUser()
+
+        const db_select = await db.select({
+            ...getTableColumns(productsTable),
+            order: {
+                id: ordersTable.id
+            }
+        }).from(ordersTable)
+            .leftJoin(productsTable, eq(ordersTable.productId, productsTable.id))
+            .where(eq(ordersTable.emailId, user?.primaryEmailAddress?.emailAddress))
+            .orderBy(desc(ordersTable.id))
+
+        if (db_select?.length > 0) {
+            return NextResponse.json({ 'success': db_select })
+        } else {
+            return NextResponse.json({ 'error': 'No Record(s) Found.' })
+        }
+    }
+    catch (e) {
+        return NextResponse.json({ 'error': e.message })
+    }
 }
