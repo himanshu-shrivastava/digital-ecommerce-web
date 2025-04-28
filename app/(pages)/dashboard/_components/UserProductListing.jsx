@@ -27,7 +27,7 @@ function UserProductListing() {
                 toast(product_list?.data?.error)
             }
         } catch (e) {
-            console.log('Error:', e)
+            console.log('Error:', e.message)
         } finally {
             setLoading(false)
         }

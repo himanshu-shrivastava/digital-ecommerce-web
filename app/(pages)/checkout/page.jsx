@@ -46,7 +46,7 @@ function Checkout() {
             setCart([]) // Set cart to empty
             router.replace('/dashboard')
         } else {
-            console.log('error', create_order)
+            console.log('error', create_order?.data?.error)
         }
     }
 

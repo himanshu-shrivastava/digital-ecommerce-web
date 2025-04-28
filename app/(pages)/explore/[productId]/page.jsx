@@ -33,7 +33,7 @@ function ProductDetail({ params }) {
                 toast(product_detail?.data?.error)
             }
         } catch (e) {
-            console.log('Error:', e)
+            console.log('Error:', e.message)
         } finally {
             setLoading(false)
         }

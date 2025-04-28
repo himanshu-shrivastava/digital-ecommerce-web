@@ -22,7 +22,7 @@ function RemoveFromCart({ product }) {
                 console.log(is_deleted?.data?.error)
             }
         } catch (e) {
-            console.log('Error:', e)
+            console.log('Error:', e.message)
         } finally {
             setDeleting(false)
         }

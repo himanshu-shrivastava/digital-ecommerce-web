@@ -26,7 +26,7 @@ function AddToCartBtn({ product, user, editable = false, size = 'sm' }) {
                 console.log(cart_data?.data?.error)
             }
         } catch (e) {
-            console.log('Error:', e)
+            console.log('Error:', e.message)
         } finally {
             setLoading(false)
         }

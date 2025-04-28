@@ -47,7 +47,6 @@ export async function DELETE(req) {
     try {
         const { searchParams } = new URL(req.url)
         const recordId = searchParams.get('recordId')
-        console.log('recordId', recordId)
 
         const db_delete = await db.delete(cartsTable)
             .where(eq(cartsTable.id, Number(recordId)))

@@ -18,10 +18,10 @@ function SimilarProduct({ category = '', productId = 0 }) {
             if (product_detail?.data?.success) {
                 setSimilarProducts(product_detail?.data?.success)
             } else {
-                console.log('GetSimilarProductList: ', product_detail?.data?.error)
+                console.log('Error: ', product_detail?.data?.error)
             }
         } catch (e) {
-            console.log('Error:', e)
+            console.log('Error:', e.message)
         } finally {
             setLoading(false)
         }
