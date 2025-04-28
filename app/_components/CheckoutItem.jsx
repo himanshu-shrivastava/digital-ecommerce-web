@@ -8,7 +8,7 @@ function CheckoutItem({ product }) {
 
     return (
         <div>
-            <Card className='p-3 flex gap-5 justify-between items-center'>
+            <Card className='p-2 flex gap-2 justify-between items-center'>
                 <div className='flex gap-5'>
                     <div>
                         <Link href={ `/explore/${product?.productId}` }>
@@ -20,7 +20,7 @@ function CheckoutItem({ product }) {
                     </div>
                     <div>
                         <h2 className='font-medium text-lg'>{ product?.title }</h2>
-                        <h2 className='text-gray-400'>{ product?.category }</h2>
+                        <h2 className='text-gray-400 text-sm'>{ product?.category }</h2>
                         <RemoveFromCart product={ product } />
                     </div>
                 </div>

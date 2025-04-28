@@ -20,7 +20,7 @@ function UserProductListing() {
     const GetUserProductList = async () => {
         setLoading(true)
         try {
-            const product_list = await axios.get('/api/products?email=' + user?.primaryEmailAddress.emailAddress)
+            const product_list = await axios.get(`/api/products?email=${user?.primaryEmailAddress.emailAddress}`)
             if (product_list?.data?.success) {
                 setUserProductList(product_list?.data?.success)
             } else {

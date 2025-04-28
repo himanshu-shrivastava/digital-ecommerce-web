@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger, } from "@/components/ui/sheet"
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger, } from "@/components/ui/sheet"
 import { CartContext } from '../_context/CartContext'
 import CartItem from './CartItem'
 import { Button } from '@/components/ui/button'
@@ -12,7 +12,7 @@ function CartList({ children }) {
     const calculateTotal = () => {
         let total = 0
         cart.forEach(item => {
-            total = total + Number(item.price)
+            total += Number(item.price)
         })
         return total
     }
@@ -21,28 +21,42 @@ function CartList({ children }) {
         <div>
             <Sheet>
                 <SheetTrigger>{ children }</SheetTrigger>
-                <SheetContent>
+                <SheetContent className='z-[100]'>
                     <SheetHeader>
                         <SheetTitle>Cart ({ cart?.length })</SheetTitle>
                         <SheetDescription asChild>
-                            <div>
-                                <p>Your all cart items are listed here:</p>
-                                <div className='flex flex-col gap-2 mt-5'>
-                                    {
-                                        cart?.length > 0 && cart.map((product, index) => (
-                                            <CartItem key={ index } product={ product } />
-                                        ))
-                                    }
-                                </div>
+                            { cart?.length > 0
+                                ?
                                 <div>
-                                    <h2 className='flex font-bold text-2xl justify-between mt-10'>
-                                        Total : <span>${ calculateTotal() }</span>
-                                    </h2>
-                                    <Link href={ '/checkout' }>
-                                        <Button className='w-full mt-3'>Checkout</Button>
-                                    </Link>
+                                    <p>Your all cart items are listed here:</p>
+                                    <div className='flex flex-col gap-2 mt-5'>
+                                        {
+                                            cart?.length > 0 && cart.map((product, index) => (
+                                                <CartItem key={ index } product={ product } />
+                                            ))
+                                        }
+                                    </div>
+                                    <div>
+                                        <h2 className='flex font-bold text-2xl justify-between mt-10'>
+                                            Total : <span>${ calculateTotal() }</span>
+                                        </h2>
+                                        <SheetClose asChild>
+                                            <Link href={ '/checkout' }>
+                                                <Button className='w-full mt-3'>Checkout</Button>
+                                            </Link>
+                                        </SheetClose>
+                                    </div>
                                 </div>
-                            </div>
+                                :
+                                <div>
+                                    <p className='mt-5'>Your cart is empty.</p>
+                                    <SheetClose asChild>
+                                        <Link href={ '/' }>
+                                            <Button className='w-full mt-3'>Continue Shopping</Button>
+                                        </Link>
+                                    </SheetClose>
+                                </div>
+                            }
                         </SheetDescription>
                     </SheetHeader>
                 </SheetContent>

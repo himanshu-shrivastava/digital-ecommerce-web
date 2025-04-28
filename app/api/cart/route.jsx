@@ -1,15 +1,15 @@
 import { db } from "@/configs/db"
-import { cartTable, productsTable } from "@/configs/schema"
+import { cartsTable, productsTable } from "@/configs/schema"
 import { eq, getTableColumns } from "drizzle-orm"
 import { NextResponse } from "next/server"
 
 export async function POST(req) {
     try {
         const { emailId, productId } = await req.json()
-        const db_insert = await db.insert(cartTable).values({
+        const db_insert = await db.insert(cartsTable).values({
             emailId: emailId,
             productId: productId
-        }).returning(cartTable)
+        }).returning(cartsTable)
 
         if (db_insert?.length > 0) {
             return NextResponse.json({ 'success': db_insert[0] })
@@ -28,10 +28,10 @@ export async function GET(req) {
 
         const db_select = await db.select({
             ...getTableColumns(productsTable),
-            ...getTableColumns(cartTable)
-        }).from(cartTable)
-            .innerJoin(productsTable, eq(cartTable.productId, productsTable.id))
-            .where(eq(cartTable.emailId, emailId))
+            ...getTableColumns(cartsTable)
+        }).from(cartsTable)
+            .innerJoin(productsTable, eq(cartsTable.productId, productsTable.id))
+            .where(eq(cartsTable.emailId, emailId))
 
         if (db_select?.length > 0) {
             return NextResponse.json({ 'success': db_select })
@@ -49,9 +49,9 @@ export async function DELETE(req) {
         const recordId = searchParams.get('recordId')
         console.log('recordId', recordId)
 
-        const db_delete = await db.delete(cartTable)
-            .where(eq(cartTable.id, Number(recordId)))
-            .returning({ deletedId: cartTable.id })
+        const db_delete = await db.delete(cartsTable)
+            .where(eq(cartsTable.id, Number(recordId)))
+            .returning({ deletedId: cartsTable.id })
         if (db_delete) {
             return NextResponse.json({ 'success': db_delete })
         } else {

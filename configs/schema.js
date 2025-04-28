@@ -21,9 +21,15 @@ export const productsTable = pgTable("products", {
     uniqueId: integer()
 })
 
-export const cartTable = pgTable("carts", {
+export const cartsTable = pgTable("carts", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     emailId: varchar('emailId').notNull().references(() => usersTable.email),
     productId: integer('productId').notNull().references(() => productsTable.id),
     quantity: integer().default(1)
+})
+
+export const ordersTable = pgTable("orders", {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    emailId: varchar('emailId').notNull().references(() => usersTable.email),
+    productId: integer('productId').notNull().references(() => productsTable.id),
 })
